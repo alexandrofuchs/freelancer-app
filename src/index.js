@@ -3,14 +3,12 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import AuthenticateProvider from './contexts/UserContext';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import AppProvider from './contexts/AppContext';
 
 import Routes from './routes';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 const theme = {
         ...DefaultTheme,
-        roundness: 2,
+        roundness: 1,
         colors: {
                 ...DefaultTheme.colors,
                 primary: '#3498db',
@@ -19,16 +17,14 @@ const theme = {
 };
 
 export default function App() {
-        return (               
+        return (
                 <PaperProvider theme={theme}>
                         <AuthenticateProvider>
-                                {/* <AppProvider> */}
-                                        <NavigationContainer>
-                                                <Routes />
-                                        </NavigationContainer>
-                                {/* </AppProvider> */}
+                                <NavigationContainer>
+                                        <Routes />
+                                </NavigationContainer>
                         </AuthenticateProvider>
-                </PaperProvider>               
+                </PaperProvider>
         );
 }
 
