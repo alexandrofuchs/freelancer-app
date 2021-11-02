@@ -32,7 +32,7 @@ const onRejected = err => {
             }
             return {
                 data: null,
-                error: err.response.data,
+                error: err.response.data.error,
             };
         }
         return {

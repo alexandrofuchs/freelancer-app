@@ -3,7 +3,7 @@ import { View, ScrollView } from 'react-native';
 import { TextInput, Button, Card } from 'react-native-paper';
 import { useAuthenticate } from '../../contexts/UserContext';
 import styles from './styles';
-import { isAlphanumeric, isValidEmail, isWord, minLength } from './validators';
+import { isAlphanumeric, isValidEmail, isWord, minLength } from '../../../validators';
 
 export default function SignUpPage({ navigation }) {
 

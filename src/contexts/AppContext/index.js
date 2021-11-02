@@ -2,6 +2,7 @@ import React, { useState, createContext, useContext, useEffect } from 'react';
 
 const AppContext = createContext({
         loading: false,
+        setLoading: () => {}
 });
 
 export default function AppProvider({ children }) {

@@ -5,7 +5,7 @@ import { useAuthenticate } from '../../contexts/UserContext';
 
 export default function HomePage({ navigation }){
     
-    const { signOut } = useAuthenticate()
+    const { signOut } = useAuthenticate();
     
     return(
         <View>
@@ -14,3 +14,11 @@ export default function HomePage({ navigation }){
         </View>
     )
 }
+
+
+
+
+
+
+
+

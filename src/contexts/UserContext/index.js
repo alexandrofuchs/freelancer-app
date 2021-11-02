@@ -2,22 +2,28 @@ import React, { useState, createContext, useContext, useEffect } from 'react';
 import Api from '../../services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import jwtDecode from 'jwt-decode';
+import { useApp } from '../AppContext';
 
 const AuthenticateContext = createContext({
         signed: false,
-        signIn: null,
+        signIn: (email, password) => {},
         signOut: null,
+        signInError: null,
 });
 
 export default function AuthenticateProvider({ children }) {
 
         const [authenticatedUser, setAuthenticatedUser] = useState(null);
+        const [signInError, setSignInError] = useState('');
+        
+        const { setLoading } = useApp();
 
-        const signIn = async () => {
-
+        
+        const signIn = async (email, password) => {
+                setLoading(true);
                 const res = await Api.post('/users/authenticate', {
-                        email: 'alexandrofuchs2@mail.com',
-                        password: 'abc123456789',
+                        email,
+                        password,
                 });
 
                 if (!!res.data) {
@@ -35,7 +41,11 @@ export default function AuthenticateProvider({ children }) {
 
                 } else {
                         console.log(res);
+                        if(res.error){
+                                setSignInError(res.error);
+                        }
                 }
+                setLoading(false);
 
         }
 
@@ -44,8 +54,9 @@ export default function AuthenticateProvider({ children }) {
                 AsyncStorage.clear();
         }
 
-        useEffect(() => {
+        useEffect(() => {                
                 const validateToken = async () => {
+                        setLoading(true);
                         const token = await AsyncStorage.getItem('@auth:token');
                         const user = await AsyncStorage.getItem('@auth:user');
 
@@ -62,16 +73,18 @@ export default function AuthenticateProvider({ children }) {
                                         setAuthenticatedUser(JSON.parse(user));
                                 }
                         }
-
+                        setLoading(false);
                 }
                 validateToken();
+                
         }, [])
 
         return (
                 <AuthenticateContext.Provider value={{
                         signed: !!authenticatedUser,
                         signIn,
-                        signOut
+                        signOut,
+                        signInError,
                 }}
                 >
                         {children}

@@ -5,6 +5,7 @@ import AuthenticateProvider from './contexts/UserContext';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 
 import Routes from './routes';
+import AppProvider from './contexts/AppContext';
 
 const theme = {
         ...DefaultTheme,
@@ -18,13 +19,15 @@ const theme = {
 
 export default function App() {
         return (
-                <PaperProvider theme={theme}>
-                        <AuthenticateProvider>
-                                <NavigationContainer>
-                                        <Routes />
-                                </NavigationContainer>
-                        </AuthenticateProvider>
-                </PaperProvider>
+                <AppProvider>
+                        <PaperProvider theme={theme}>
+                                <AuthenticateProvider>
+                                        <NavigationContainer>
+                                                <Routes />
+                                        </NavigationContainer>
+                                </AuthenticateProvider>
+                        </PaperProvider>
+                </AppProvider>
         );
 }
 

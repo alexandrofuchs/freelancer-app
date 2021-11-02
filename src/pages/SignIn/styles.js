@@ -15,8 +15,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },    
   actions:{
+    display: 'flex',
+    flexDirection: 'column',
     justifyContent: 'center',
   },
+  errorText:{
+    color: 'red',
+  }
 });
 
 export default styles;

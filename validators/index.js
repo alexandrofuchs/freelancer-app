@@ -14,6 +14,12 @@ function isValidEmail(value) {
     return regex.test(String(value).toLowerCase());
 }
 
+function isValidPassword(value) {
+    if (isEmpty(value)) return false; 
+    const regex = /^[A-Za-z0-9]*\d+[A-Za-z0-9]*$/
+    return regex.test(String(value)) && minLength(String(value), 6);
+}
+
 function isAlphanumeric(value) {
     if (isEmpty(value)) return false; 
     const regex = /^[0-9a-zA-Z]+$/;
@@ -53,6 +59,7 @@ function maxAndMinLength(value, min, max) {
 
 export {
     isValidEmail,
+    isValidPassword,
     isAlphanumeric,
     isNullorUndefined,
     isEmpty,
