@@ -49,6 +49,7 @@ export default function SignInPage({ navigation }) {
 
     return (
         <View style={styles.container}>
+            <ScrollView style={{flex: 1, width: '100%', height: '100%'}} contentContainerStyle={{alignItems:'center'}}>
             <Avatar.Icon size={100} icon="account" color={colors.primary} style={{backgroundColor: 'transparent'}} />
             <Paragraph style={{fontWeight: 'bold', color: colors.primary}}>Acessar Conta</Paragraph>
             
@@ -91,6 +92,7 @@ export default function SignInPage({ navigation }) {
             >Criar Conta</Button>
 
             <Button>{"Esqueceu sua senha"}</Button>
+            </ScrollView>
         </View>
 
     );

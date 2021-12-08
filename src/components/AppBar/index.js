@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState , useCallback} from 'react';
+import { View } from 'react-native';
 import {
     Appbar,
     Menu,
@@ -6,32 +7,32 @@ import {
     Searchbar,
     useTheme,
 } from 'react-native-paper';
+import { useApp } from '../../contexts/AppContext';
 import { useAuthenticate } from '../../contexts/UserContext';
-
+import _ from 'lodash';
 
 export default function AppBar(props) {
 
     const { colors } = useTheme();
+    const { search, searchService } = useApp();
 
     const [visible, setVisible] = useState(false);
-    const [searchQuery, setSearchQuery] = React.useState('');
     const { signed, signOut } = useAuthenticate();
 
-    const [openCategories, setOpenCategories] = useState(false);
-
-    const onChangeSearch = query => setSearchQuery(query);
+    const debouncedSearch = useCallback(
+		_.debounce(search => searchService(search), 1000),
+		[], 
+	);
 
     const openMenu = () => setVisible(true);
     const closeMenu = () => setVisible(false);
 
-    console.log(props);
+    
 
-    const { navigation, back } = props;
+    const { route, navigation, back } = props;
 
-    return (  
-        <Appbar.Header
-            
-        >
+    return (
+        <Appbar.Header style={{height:80}}>
             {/* <Appbar.Action icon="menu" color="white" onPress={navigation.openDrawer} /> */}
             {/* {signed ? (                
                 <Menu
@@ -42,10 +43,27 @@ export default function AppBar(props) {
                 </Menu>
             ) : null} */}
 
-            {back ? <Appbar.BackAction onPress={navigation.goBack} /> : null}
-            <Appbar.Content title={props.options.title} color={colors.background}
-                style={{alignItems: 'center'}}
-            />
+            {back ?
+                <Appbar.BackAction onPress={navigation.goBack} />: null}
+            {route.name === "Home" ?            
+                <Appbar.Action icon="filter-variant" /> : null
+            }
+                
+            {route.name !== "Home" ?            
+                <Appbar.Content 
+                    title={props.options.title} 
+                    color={colors.background}
+                    style={{ alignItems: 'center' }}
+                /> 
+                : 
+                <Searchbar
+                    style={{ flex: 1, borderRadius: 50 }}
+                    placeholder="Buscar"
+                    onChangeText={ text => debouncedSearch(text)}
+                    defaultValue={search}
+                />
+            }
+
             {signed ? (
                 <Menu
                     visible={visible}
@@ -57,7 +75,7 @@ export default function AppBar(props) {
                     <Menu.Item onPress={signOut} title="Sair" />
                 </Menu>
             ) : null}
-        </Appbar.Header>    
-   
+        </Appbar.Header>
+
     );
 }

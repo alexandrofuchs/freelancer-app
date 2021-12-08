@@ -22,19 +22,21 @@ export default function ViewProfile() {
 
     useEffect(() => {
         const getProfile = async () => {
-            const res = await Api.get(`/users/${userData.id}/profiles`);
-
-            console.log(res);
-            if (res.data) {
-                setProfile(res.data.user.profile)
+            try {
+                const res = await Api.get(`/users/${userData.id}/profiles`);
+                console.log(res);
+                if (res.data) {
+                    setProfile(res.data.data);
+                }
+            } catch (error) {
+                console.log(error);
             }
+           
+
+   
         }
         getProfile();
     }, [])
-
-    useEffect(() => {
-        console.log(profile.biografy)
-    }, [profile])
 
     return (
         <View
@@ -46,26 +48,26 @@ export default function ViewProfile() {
             <Card
                 style={{
                     justifyContent: 'space-between',
-                    alignItems: 'stretch',
+                    alignItems:'stretch',
                     width: '99%',
                     height: '99%',
                     borderWidth: 1,
                     borderColor: colors.primary
-                }}
-            >
+                }}>
                 {
                     !profile ?
                         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
                             <Text>Você ainda não criou seu perfil!</Text>
                         </View>
                         :
-                        <ScrollView>
-                            <List.Section>
+                        <>
+                            {/* <List.Section> */}
                                 <List.Accordion
                                     title="Biografia"
                                     left={props => null}
                                     style={{
                                         margin: 2,
+                                        width:'100%'
                                     }}
                                 >
                                     <Text
@@ -73,7 +75,7 @@ export default function ViewProfile() {
                                             height: 200,
                                             margin: 2,
                                         }}                                        
-                                    >{profile.biografy}</Text>
+                                    >{profile ? profile.biography: null}</Text>
                                 </List.Accordion>
                                 <List.Accordion
                                     title="Experiência"
@@ -81,18 +83,21 @@ export default function ViewProfile() {
                                     <List.Item title="First item" />
                                     <List.Item title="Second item" />
                                 </List.Accordion>
-                                <List.Accordion title="Outras Informações">
+                                <List.Accordion                       
+                                    title="Outras Informações"
+                                    left={props => null}
+                                    style={{
+                                        margin: 2,
+                                        width:'100%'
+                                    }}>
                                     <Text
-                                        maxLength={200}
-                                        style={{
-                                            height: 200,
-                                            margin: 2,
-                                        }}
-                                        value={''}
-                                        onChangeText={text => setTextBiografy(text)}
-                                    />
+                                            style={{
+                                                height: 200,
+                                                margin: 2,
+                                            }}                                        
+                                        >{profile ? profile.otherInfo: null}</Text>
                                 </List.Accordion>
-                            </List.Section>
+                            {/* </List.Section> */}
                             {/* <Card.Actions>
                              <Button
                                  style={{
@@ -102,7 +107,7 @@ export default function ViewProfile() {
                                  color={colors.background}
                              >Salvar</Button>
                          </Card.Actions> */}
-                        </ScrollView>
+                        </>
                 }
 
             </Card>

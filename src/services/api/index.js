@@ -2,7 +2,7 @@ import Axios from 'axios';
 import { BASE_URL } from '@env';
 
 const Api = Axios.create({
-    baseURL: 'http://192.168.1.2:1996',
+    baseURL: BASE_URL,
     timeout: 5000,
     headers: { 'Content-Type': 'application/json; charset=utf-8' }
 });

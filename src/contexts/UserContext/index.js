@@ -11,7 +11,7 @@ const AuthenticateContext = createContext({
         signOut: null,
         upsert: (user = {id: null, email: '', password: '', firstName: '', lastName: '' }) => { },
         signInError: null,
-        validateToken: () => {}
+        validateToken: () => {},
 });
 
 export default function AuthenticateProvider({ children }) {
@@ -22,7 +22,7 @@ export default function AuthenticateProvider({ children }) {
         const { setLoading } = useApp();
 
         const validateToken = async () => {
-                //setLoading(true);
+                setLoading(true);
 
                 const token = await AsyncStorage.getItem('@auth:token');
                 const user = await AsyncStorage.getItem('@auth:user');
@@ -34,25 +34,23 @@ export default function AuthenticateProvider({ children }) {
 
                         if (res.error) {
                                 signOut();
-                                return;
+                                return setLoading(false);
                         }
                         if (res.data) {
                                 await setUser(res.data.token);
                         }
                 }
-                //setLoading(false);
+                setLoading(false);
         }
 
         const upsert = async (user) => {
 
-                if(!!user.id){
-                        console.log(user);
+                if(!!user.id){                        
                         const res = await Api.put(`/users/${user.id}`, {
                                 email: user.email,
                                 firstName: user.firstName,
                                 lastName: user.lastName,
-                        });
-                        console.log(res);
+                        });            
                         return res;
 
                 }else{
@@ -61,9 +59,7 @@ export default function AuthenticateProvider({ children }) {
                                 password: user.password,
                                 firstName: user.firstName,
                                 lastName: user.lastName,
-                        });        
-                        //console.log(res);  
-                             
+                        }); 
                         return res;
                 }
         }
@@ -87,7 +83,6 @@ export default function AuthenticateProvider({ children }) {
                 if (!!res.data) {
                         await setUser(res.data.token);
                 } else {
-                        console.log(res);
                         if (res.error) {
                                 setSignInError(res.error);
                         }
@@ -104,9 +99,9 @@ export default function AuthenticateProvider({ children }) {
         
 
         useEffect(() => {
-                setLoading(true);
+                
                 validateToken();
-                setLoading(false);
+                
         }, [])
 
         return (
@@ -117,7 +112,7 @@ export default function AuthenticateProvider({ children }) {
                         signOut,
                         upsert,
                         signInError,
-                        validateToken,
+                        validateToken,                     
                 }}
                 >
                         {children}
@@ -127,6 +122,5 @@ export default function AuthenticateProvider({ children }) {
 
 export const useAuthenticate = () => {
         const context = useContext(AuthenticateContext);
-
         return context;
 }

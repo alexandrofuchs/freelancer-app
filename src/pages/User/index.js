@@ -7,8 +7,6 @@ import { useAuthenticate } from '../../contexts/UserContext';
 
 export default function User({ navigation }) {
 
-  //console.log(navigation)
-
   const [expanded, setExpanded] = React.useState({
     accordion1: false,
     accordion2: false,
@@ -36,8 +34,18 @@ export default function User({ navigation }) {
         left={props => <List.Icon {...props} icon="account-tie" />}
         expanded={expanded.accordion1}
         onPress={() => handlePress(1)}>
-        <List.Item title="Editar" onPress={() => navigation.push("UserPresentation")} />
-        <List.Item title="Visualizar" onPress={() => navigation.push("UserProfile")} />
+        <List.Item title="Atualizar" onPress={() => navigation.push("UserPresentation")} />
+        <List.Item title="Visualizar" onPress={() => navigation.push("UserProfile", {
+          user: userData
+        })} />
+      </List.Accordion>
+
+      <List.Accordion
+        title="Serviços contratados"
+        left={props => <List.Icon {...props} icon="briefcase-account" />}
+        expanded={expanded.accordion2}
+        onPress={() => handlePress(2)}>
+        <List.Item title="Visualizar" onPress={() => navigation.push("ContractedServices")} />        
       </List.Accordion>
 
       <List.Accordion
@@ -45,8 +53,10 @@ export default function User({ navigation }) {
         left={props => <List.Icon {...props} icon="briefcase-account" />}
         expanded={expanded.accordion2}
         onPress={() => handlePress(2)}>
-        <List.Item title="Atualizar Dados" onPress={<UserUpdate />} />
-        <List.Item title="Editar Endereço" />
+        <List.Item title="Criar Serviço" onPress={() => navigation.push("CreateService")} />
+        <List.Item title="Meus Serviços" onPress={() => navigation.push("UserServiceList")} />
+        <List.Item title="Solicitações" onPress={() => navigation.push("SolicitedServices")} />
+        <List.Item title="Perguntas" onPress={() => {}} />
       </List.Accordion>
 
       <List.Accordion
