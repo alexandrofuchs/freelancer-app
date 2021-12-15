@@ -20,7 +20,7 @@ export default function ChatPage({ navigation, route }) {
   
   const sendMessage = () => {
 
-    setMessages([...messages,message]);
+   
     socket.emit('sendMessage', { user: userData.firstName, message, serviceOrderId: route.params.serviceOrderId ? route.params.serviceOrderId : null });
     setMessage('');
   }
@@ -38,7 +38,7 @@ export default function ChatPage({ navigation, route }) {
     socket.on("receivedMessage", msg => {
       console.log(msg);
       console.log([...messages])
-      
+      setMessages([...messages,msg])
     });
   })
 
@@ -49,33 +49,35 @@ export default function ChatPage({ navigation, route }) {
 
 
   return (
-    <Card style={{ flex: 1, justifyContent: 'space-between' }}>
-      <Card.Content style={{ height: '85%', backgroundColor: '#f1f1f1' }}>
+    <Card style={{ flex: 1, justifyContent: 'space-between',borderBottomLeftRadius: 25, borderBottomRightRadius: 25, padding: 5, margin: 5}}>
+      {/* <Card.Content style={{ height: '85%', backgroundColor: '#f1f1f1' }}> */}
         <ScrollView>
           {
             messages ?
             messages.map( (item, key) => (
-              <Card style={{marginVertical: 2}} key={key}>
+              <Card style={{marginVertical: 2, borderRadius: 5}} key={key}>
+                <View style={{flexDirection:'row', alignItems:'center', padding: 2}}>
                 <Subheading style={{fontWeight:'bold'}}>{item.user}: </Subheading>
-                <Paragraph style={{fontWeight:'600'}}>{item.message}</Paragraph>
+                <Text style={{flex: 1, fontWeight:'600'}}>{item.message}</Text>
+                </View>
               </Card>
             )) : null
           }
         </ScrollView>
-      </Card.Content>
+      {/* </Card.Content> */}
 
-      <Card.Actions style={{ flexDirection: 'row', flexGrow: 1 }}>
+      <View style={{ flexDirection: 'row'}}>
         <TextInput
           value={message}
-          style={{ flex: 1 }}
+          style={{ flex: 1, height: 40,borderBottomLeftRadius:25}}
           onChangeText={text => setMessage(text)}
         />
         <Button
           onPress={sendMessage}
-          style={{ backgroundColor: 'red', borderBottomEndRadius: 20, }}
+          mode='contained'
+          style={{height: 40, borderBottomEndRadius: 20, }}
         >Enviar</Button>
-      </Card.Actions>
-
+      </View>
     </Card>
   )
 }

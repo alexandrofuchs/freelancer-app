@@ -7,6 +7,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 import DropDownPicker from 'react-native-dropdown-picker';
 import Api from '../../services/api';
+import { color } from 'react-native-reanimated';
 
 
 export default function ServiceOrderPage({ navigation, route }) {
@@ -113,8 +114,8 @@ export default function ServiceOrderPage({ navigation, route }) {
     },[date])
 
     return (
-        <Card style={{margin: '2%', borderRadius:5}}>
-            <Title> Detalhes: </Title>
+        <Card style={{margin: '2%', borderRadius:25}}>
+            <Title style={{textAlign:'center', textAlignVertical:'center', color: colors.background, backgroundColor:colors.primary, width: '100%', padding: 5, borderTopRightRadius:25, borderTopLeftRadius:25}}>Agendar</Title>
             <Text> Serviço: { service ? service.title : null } </Text>
             <Text> Ofertante: { service ? service.User.firstName : null } </Text>
             <Text> Contratante: { userData.firstName } </Text>
@@ -126,7 +127,7 @@ export default function ServiceOrderPage({ navigation, route }) {
                 
                 (
                     <>
-                    <Headline>Dias da Semana: </Headline>
+                    <Subheading style={{fontWeight:'bold'}}>Dias da Semana: </Subheading>
                     <View style={{flexDirection:'row'}}>
                
                     {
@@ -141,7 +142,7 @@ export default function ServiceOrderPage({ navigation, route }) {
             
            
             <View style={{flexDirection:'row', alignItems:'center'}}>
-                <Headline>Horários: </Headline>
+                <Subheading style={{fontWeight:'bold'}}>Horários: </Subheading>
                 <Subheading>{schedule.startTime.substring(0, 5)} - { schedule.endTime.substring(0, 5)}</Subheading>
             </View>
             <Divider/>
@@ -182,15 +183,13 @@ export default function ServiceOrderPage({ navigation, route }) {
                     onChange={onChange}
                     minimumDate={Date.now()}
                 />
-            )}
-
-            <Card.Actions style={{width:'100%'}}>
+            )}          
                 <Button 
+                    mode='contained'
                     onPress={onSendOrder} 
-                    style={{width: '100%'}}
+                    style={{width: '100%', borderBottomStartRadius: 25, borderBottomEndRadius: 25}}
                     disabled={errorDate || errorHour}   
-                >Solicitar Ao Ofertante</Button>
-            </Card.Actions>            
+                >Solicitar Ao Ofertante</Button>        
         </Card>
     );
 };

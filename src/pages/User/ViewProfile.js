@@ -62,21 +62,21 @@ export default function ViewProfile() {
                         :
                         <>
                             {/* <List.Section> */}
-                                <List.Accordion
+                                {/* <List.Accordion
                                     title="Biografia"
                                     left={props => null}
                                     style={{
                                         margin: 2,
                                         width:'100%'
                                     }}
-                                >
+                                > */}
                                     <Text
                                         style={{
                                             height: 200,
                                             margin: 2,
                                         }}                                        
                                     >{profile ? profile.biography: null}</Text>
-                                </List.Accordion>
+                                {/* </List.Accordion> */}
                                 <List.Accordion
                                     title="Experiência"
                                     left={props => null}>

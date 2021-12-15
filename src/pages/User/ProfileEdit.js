@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { createRef, useEffect, useRef, useState } from 'react';
 import { View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import {
@@ -11,6 +11,8 @@ import {
     Title,
     Paragraph,
     DataTable,
+    Subheading,
+    Divider,
 } from 'react-native-paper';
 import { color } from 'react-native-reanimated';
 import { useApp } from '../../contexts/AppContext';
@@ -62,13 +64,15 @@ export default function UserPresentation({ navigation }) {
     }
 
     const addItem = async () => {
-        if(!!title & !!description){
-            setProfile({ ...profile, items: [...profile.items, { title, description } ]})
+        if (!!title.length && !!description.length) {
+            setProfile({ ...profile, items: [...profile.items, { title, description }] })
+            setTitle('');
+            setDescription('');
         }
-        
+
     }
 
-    useEffect(() => { 
+    useEffect(() => {
         const getProfile = async () => {
             try {
                 const res = await Api.get(`/users/${userData.id}/profiles`);
@@ -79,13 +83,15 @@ export default function UserPresentation({ navigation }) {
             } catch (error) {
                 console.log(error);
             }
-        } 
+        }
         getProfile();
     }, [])
 
-    useEffect(() => {
-        console.log(profile)
-    }, [profile])
+    const inputDescriptionRef = createRef();  
+    const inputBiographyRef = createRef(); 
+    const inputOtherInfoRef = createRef();   
+    const [editBiography, setEditBiography] = useState(false); 
+    const [editOtherInfo, setEditOtherInfo] = useState(false); 
 
     return (
         <View
@@ -105,92 +111,105 @@ export default function UserPresentation({ navigation }) {
                 }}
             >
                 <ScrollView>
-                    <List.Section>
-                        <List.Accordion
-                            title="Biografia"
-                            left={props => null}
-                            style={{
-                                margin: 2,
-                            }}
-                        >
-                            <TextInput
-                                maxLength={200}
-                                style={{
-                                    maxHeight: 100,
-                                }}
-                                textAlignVertical="top"
-                                left
-                                numberOfLines={5}
-                                placeholder="descreva sobre você!"
-                                multiline
-                                value={profile.biography}
-                                onChangeText={text => setProfile({ ...profile, biography: text })}
-                            />
-                        </List.Accordion>
-                        <List.Accordion title="Experiências" style={{ flex: 1 }} >
-                            <View style={{ flex: 1, maxHeight: 200 }}>
-                                <ScrollView>
-                                    <DataTable>
+                <Card.Content>                
+                    <Title>Biografia:</Title>
+                    <Subheading>Prévia: </Subheading>
+                    <Text
+                    >{profile.biography}</Text>
+                    <TextInput
+                        editable={editBiography}
+                        mode='outlined'
+                        maxLength={200}
+                        style={{
+                            maxHeight: 100,
+                        }}
+                        textAlignVertical="top"
+                        left
+                        numberOfLines={5}
+                        placeholder="descreva sobre você!"
+                        multiline
+                        onSubmitEditing={() => inputOtherInfoRef.current.focus()}
+                        returnKeyType="next"
+                        blurOnSubmit={false}
+                        value={profile.biography}
+                        onChangeText={text => setProfile({ ...profile, biography: text })}
+                    />
+                    <Button onPress={() => setEditBiography(!editBiography)}>Editar</Button>
+                    <Title>Outras Informações:</Title>
+                    <Text>{profile.otherInfo}</Text>
+                    <TextInput
+                        editable={editOtherInfo}
+                        ref={inputOtherInfoRef}
+                        mode='outlined'
+                        maxLength={200}
+                        style={{
+                            maxHeight: 100,
+                        }}
+                        textAlignVertical="top"
+                        left
+                        numberOfLines={5}
+                        textContentType={'URL'}
+                        placeholder="outras informações"
+                        multiline
+                        value={profile.otherInfo}
+                        onChangeText={text => setProfile({ ...profile, otherInfo: text })}
+                    />
+                    <Button onPress={() => setEditOtherInfo(!editOtherInfo)}>Editar</Button>
+                    <Title>Experiências:</Title>
 
-
-                                        {
-                                            (profile.items.length) ?
-                                                <>
-                                                    <DataTable.Header>
-                                                        <DataTable.Title>Item</DataTable.Title>
-                                                        <DataTable.Title>Descrição</DataTable.Title>
-                                                    </DataTable.Header>
-
-                                                    {
-                                                        profile.items.map((item, index) => (
-                                                            <DataTable.Row key={index}>
-                                                                <DataTable.Cell>
-                                                                    {item.title}
-                                                                </DataTable.Cell>
-                                                                <DataTable.Cell>
-                                                                    {item.description}
-                                                                </DataTable.Cell>
-                                                            </DataTable.Row>
-                                                        ))
-                                                    }
-                                                </> : null
-                                        }
-                                    </DataTable>
-                                    <View>
-                                    <TextInput
-                                        mode='outlined'
-                                        label="Título"
-                                        value={title}
-                                        onChangeText={(text) => setTitle(text)}
-                                    />
-                                    <TextInput
-                                        mode='outlined'
-                                        label="Descrição"
-                                        value={description}
-                                        onChangeText={(text) => setDescription(text)}
-                                    />
-                                    <Button onPress={addItem}>Adicionar Item</Button>
-                                    </View>
-                                </ScrollView>
+                    <View style={{ flex: 1, maxHeight: 400 }}>
+                        <ScrollView>
+                            <Divider/>
+                            <DataTable>
+                                {
+                                    profile.items.map((item, index) => (
+                                        <View key={index}>
+                                        <DataTable.Row>
+                                            <DataTable.Cell>
+                                                <Subheading style={{fontWeight:'bold'}}>{item.title}: </Subheading>                                             
+                                            </DataTable.Cell>
+                                        </DataTable.Row>
+                                        <DataTable.Row>
+                                            <DataTable.Cell>
+                                                <View style={{flex: 1}}><Text>{item.description}</Text></View>
+                                                
+                                            </DataTable.Cell>
+                                        </DataTable.Row>
+                                        </View>
+                                    ))
+                                }
+                            </DataTable>
+                            </ScrollView>
+                            <View style={{padding: '2%', borderRadius:5}}>
+                                <TextInput
+                                    style={{height:40}}
+                                    mode='outlined'
+                                    label="Título"
+                                    value={title}
+                                    returnKeyType="next"
+                                    onSubmitEditing={() => inputDescriptionRef.current.focus()}
+                                    onChangeText={(text) => setTitle(text)}
+                                    blurOnSubmit={false}
+                                />
+                                <TextInput
+                                    ref={inputDescriptionRef}
+                                    style={{height:40}}
+                                    mode='outlined'
+                                    label="Descrição"
+                                    value={description}
+                                    onChangeText={(text) => setDescription(text)}
+                                />
+                                <Button 
+                                    mode="contained" 
+                                    onPress={addItem}
+                                    style={{borderBottomLeftRadius:25, borderBottomEndRadius: 25}}
+                                    disabled={!(!!title && !!description)}
+                                    >Adicionar Item</Button>
                             </View>
-                        </List.Accordion>
-                        <List.Accordion title="Outras Informações">
-                            <TextInput
-                                maxLength={200}
-                                style={{
-                                    maxHeight: 100,
-                                }}
-                                textAlignVertical="top"
-                                left
-                                numberOfLines={5}
-                                placeholder="apresente mais informações sobre você"
-                                multiline
-                                value={profile.otherInfo}
-                                onChangeText={text => setProfile({ ...profile, otherInfo: text })}
-                            />
-                        </List.Accordion>
-                    </List.Section>
-                </ScrollView>
+                        
+                    </View> 
+                
+                </Card.Content>
                 <Card.Actions>
                     <Button
                         style={{
@@ -201,6 +220,8 @@ export default function UserPresentation({ navigation }) {
                         onPress={onSave}
                     >Salvar</Button>
                 </Card.Actions>
+                </ScrollView>
+                
             </Card>
         </View>
     )

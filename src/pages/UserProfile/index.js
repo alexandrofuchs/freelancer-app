@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { View, ScrollView } from 'react-native';
-import { Text, Card, Title, useTheme, Avatar, Headline, Divider, List, Button } from 'react-native-paper';
+import { Text, Card, Title, useTheme, Avatar, Headline, Divider, List, Button, Subheading } from 'react-native-paper';
 import Api from '../../services/api';
 import User from '../User';
 import { useAuthenticate } from '../../contexts/UserContext';
 import { DataTable } from 'react-native-paper';
+import { color } from 'react-native-reanimated';
 
 export default function UserProfile({ route, navigation }) {
 
@@ -43,18 +44,23 @@ export default function UserProfile({ route, navigation }) {
         <Card
             style={{
                 margin: '2%',
-                borderRadius: 5,
+                borderRadius: 25,
                 flex: 1
             }}
         >
-            <Title
-                style={{
-                    textAlign: 'center',
-                    padding: '5%',
-                    borderTopStartRadius: 5,
-                    backgroundColor: colors.primary,
-                    color: colors.background
-                }}>Ofertante</Title>
+            <View style={{
+                backgroundColor: colors.primary,
+                borderTopStartRadius: 25,
+                borderTopEndRadius: 25,
+                textAlign: 'center',
+                height: 40,
+            }}
+            >
+                <Card.Title
+                    title={'Perfil do Ofertante'}
+                    titleStyle={{ color: colors.background, flex: 1, alignSelf: 'center' }}
+                ></Card.Title>
+            </View>
             <Card.Content >
                 <View style={{ flexDirection: 'row' }}>
                     <View style={{ height: '100%', width: '70%' }}>
@@ -65,36 +71,46 @@ export default function UserProfile({ route, navigation }) {
                 </View>
                 <View>
                     <ScrollView>
-                        <List.Section title="Descrição:">
-                            <Text>{profile && profile.biography.length ? profile.biography : "nada foi informado"}</Text>
-                        </List.Section>
-                        <Divider/>
-                        <List.Section title="Outras Informações:">
-                            <Text>{profile && profile.otherInfo.length ? profile.otherInfo : "nada foi informado"}</Text>                          
-                        </List.Section>
-                        <Divider/>
-                        <List.Section title="Experiências:">
-                            {
-                                profile.items.length ?
-                                <>
-                                    <DataTable.Header>
-                                        <DataTable.Title>Item</DataTable.Title>
-                                        <DataTable.Title>Descrição</DataTable.Title>
-                                    </DataTable.Header>
-                                    {
-                                        profile.items.map( (item, index) => (
-                                            <DataTable.Row key={index}>
-                                                   <DataTable.Cell>{item.title}</DataTable.Cell>
-                                                   <DataTable.Cell>{item.description}</DataTable.Cell>
-                                            </DataTable.Row> 
-                                        ))                                                    
-                                    }
-                                </> : null
-                            }
-                    
+                        {/* <List.Section title="Descrição:"> */}
+                        <Title>Descrição:</Title>
+                        <Text>{profile && profile.biography.length ? profile.biography : "nada foi informado"}</Text>
+                        {/* </List.Section> */}
+                        <Divider />
+                        <Title>Outras Informações:</Title>
+                        <Text>{profile && profile.otherInfo.length ? profile.otherInfo : "nada foi informado"}</Text>
+                        {/* </List.Section> */}
+                        <Divider />
+                        {/* <List.Section title="Experiências:"> */}
 
-                              
-                        </List.Section>
+                        {
+                            profile.items.length ?
+                                <ScrollView>
+                                    <Title>Experiências:</Title>
+                                    {
+
+                                        profile.items.map((item, index) => (
+                                            <View key={index}>
+
+
+                                                <Subheading style={{ fontWeight: "bold" }}>
+                                                    {item.title}
+                                                </Subheading>
+
+
+
+                                                <Text>
+                                                    {item.description}
+                                                </Text>
+
+                                            </View>
+                                        ))
+                                    }
+                                </ScrollView> : null
+                        }
+
+
+
+                        {/* </List.Section> */}
                     </ScrollView>
                 </View>
             </Card.Content>

@@ -27,6 +27,8 @@ export default function SignInPage({ navigation }) {
         active: true,
     });
 
+    const [showPassword, setShowPassword] = useState(false);
+
     const [password, setPassword] = useState({
         value: '',
         error: true,
@@ -56,23 +58,30 @@ export default function SignInPage({ navigation }) {
             <Card style={styles.card}>
                 <TextInput
                     ref={inputEmail}
-                    value={email.value}
+                    value={email.value.toLowerCase()}
                     onChangeText={(value) => setEmail({ ...email, value })}
                     style={styles.input}                    
                     //error={email.error}
+                    returnKeyType='next'
+                    onSubmitEditing={() => inputPassword.current.focus()}
+                    keyboardType='email-address'
+                    autoCapitalize='none'
                     mode="text"
-                    label="email ou telefone"
-                    placeholder="digite seu email ou telefone"
+                    label="email"
+                    placeholder="digite seu email"
+                    blurOnSubmit={false}
                 />
                 <TextInput
                     ref={inputPassword}
                     value={password.value}
                     onChangeText={(value) => setPassword({ ...password, value })}
+                    keyboardType='default'
+                    autoCapitalize='none'
                     //error={password.error}
                     style={styles.input}
                     label="senha"
-                    secureTextEntry
-                    right={<TextInput.Icon name="eye" />}
+                    secureTextEntry={showPassword}
+                    right={<TextInput.Icon name={showPassword ? "eye": "eye-off"} onPress={() => setShowPassword(!showPassword)}/>}
                 />
                 
                 <Card.Actions style={styles.actions}>

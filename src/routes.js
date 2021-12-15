@@ -55,7 +55,7 @@ export default function Routes() {
                             <Stack.Screen name="UserUpdate" component={UserUpdate} options={{title: 'Atualizar Dados'}}/>  
                             <Stack.Screen name="UserPresentation" component={ProfileEditPage} options={{title: 'Editar Perfil' }} />                     
                             <Stack.Screen name="UserProfile" component={UserProfile} options={{title: 'Visualizar Perfil' }} />  
-                            <Stack.Screen name="CreateService" component={CreateServicePage} options={{title: 'Criar Serviço' }} /> 
+                            <Stack.Screen name="CreateService" component={CreateServicePage} options={{title: 'Customizar Serviço' }} /> 
                             <Stack.Screen name="ServiceOrder" component={ServiceOrderPage} options={{title: 'Solicitar Serviço' }} />
                             <Stack.Screen name="Chat" component={ChatPage} options={{title: 'Chat' }} />  
                             <Stack.Screen name="ContractedServices" component={ContractedServicesPage} options={{title: 'Serviços Contratados' }} />

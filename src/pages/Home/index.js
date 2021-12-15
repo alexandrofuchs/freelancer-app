@@ -22,7 +22,9 @@ import {
   Text,
   Provider,
   ActivityIndicator,
-  Menu
+  Menu,
+  ToggleButton,
+  
 } from 'react-native-paper';
 import { ceil } from 'react-native-reanimated';
 import { useApp } from '../../contexts/AppContext';
@@ -35,6 +37,8 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 
 import { Drawer } from 'react-native-paper';
+import { Ionicons } from '@expo/vector-icons';
+
 
 const MyComponent = () => {
   const [visible, setVisible] = React.useState(false);
@@ -83,6 +87,7 @@ export default function Home({ navigation }) {
 
   const [refreshing, setRefreshing] = useState(false);
 
+
   const loadServices = async (page) => {
 
     if(page === 1){
@@ -100,7 +105,7 @@ export default function Home({ navigation }) {
     setState({ ...state, loading: true });
     
     const res = await Api.get(`/services?search=${search}&limit=${limit}&page=${page}`);
-
+    
     if (res.data) {
       setState({
         data: [...state.data, ...res.data.rows],
@@ -118,7 +123,17 @@ export default function Home({ navigation }) {
   }, []);
 
   useEffect(() => {
-    loadServices(1);
+    let cancel = false;
+
+    loadServices(1).then(() => {
+    if (cancel) return;
+      setState({...state, loading: false});
+    });
+
+  return () => { 
+    cancel = true;
+  }
+    
   },[]);
 
   useEffect(() => {
@@ -127,27 +142,39 @@ export default function Home({ navigation }) {
   }, [search])
 
   const renderItem = ({ item }) => (
-    <Card style={{ margin: 10, padding: 5, borderRadius: 10 }}>
+    <Card style={{ margin: 10, borderRadius: 25, borderWidth: 1, borderColor:colors.primary}}>
       {/* <Card.Title title="Card Title" subtitle="Card Subtitle" left={LeftContent} /> */}
+      <View style={{flexDirection:'row'}}>
+      <Card.Cover
+        style={{ width: 100, height: 100, margin:'1%' ,borderRadius:25}}
+        source={require('../../../assets/serviceimage.png')} />
       <Card.Content>
         <Title>{item.title}</Title>
         <Paragraph>{item.description}</Paragraph>
+        <View style={{flexDirection:'row'}}>
+          {
+           
+          [1, 2, 3, 4, 5].map((index) =>
+            <Ionicons key={index} name={index <=2 ? "star" : "star-outline"} size={20} color={colors.primary} />
+          )}
+        </View>
+
       </Card.Content>
-      <Card.Cover
-        style={{ borderRadius: 10 }}
-        source={{ uri: null }} />
-      <Card.Actions>
+      </View>
+      
         <Button
           onPress={() => {
             navigation.navigate("Service", {
               serviceId: item.id
             })
           }}
-          style={{ borderRadius: 50, backgroundColor: colors.primary, width: '100%' }}
+          style={{ 
+            borderBottomStartRadius: 25,
+            borderBottomEndRadius: 25, 
+            backgroundColor: colors.primary, 
+            width: '100%' }}
           color={colors.background}
         >Detalhes</Button>
-      </Card.Actions>
-      <Divider />
     </Card>
   );
 
@@ -160,24 +187,71 @@ export default function Home({ navigation }) {
     );
   }
 
+  const [viewFilterMenu, setViewFilterMenu] = useState(false);
+  const [viewSortMenu, setViewSortMenu] = useState(false);
+
+  const openViewFilterMenu = () => {
+    setViewFilterMenu(true);
+  }
+
+  const closeViewFilterMenu = () => {
+    setViewFilterMenu(false);
+  }
+
+  const openViewSortMenu = () => {
+    setViewSortMenu(true);
+  }
+
+  const closeViewSortMenu = () => {
+    setViewSortMenu(false);
+  }
+
+  if(state.loading){
+    return (<ActivityIndicator />)
+  }
+
   return (
-    <FlatList
-      //contentContainerStyle={styles.scrollView}
-      refreshControl={
-        <RefreshControl
-          colors={[colors.primary]}
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-        />}
-      data={state.data}
-      renderItem={renderItem}
-      keyExtractor={item => item.id}
-      onEndReached={() => loadServices(state.page+1)}
-      onEndReachedThreshold={0.1}
-    //ListFooterComponent={renderFooter}
-    />
+    <View>
+      <View style={{flexDirection:'row', width:'100%', alignItems:'center',justifyContent:'center'}}>
+      <Menu
+          visible={viewFilterMenu}
+          onDismiss={closeViewFilterMenu}
+          anchor={<Button onPress={openViewFilterMenu}  icon={'filter-variant'}  compact>Filtrar</Button>}>
+          <Menu.Item onPress={() => {}} title="Item 1" />
+          <Menu.Item onPress={() => {}} title="Item 2" />
+          <Divider />
+          <Menu.Item onPress={() => {}} title="Item 3" />
+        </Menu>
+        <Menu
+          visible={viewSortMenu}
+          onDismiss={closeViewSortMenu}
+          anchor={<Button onPress={openViewSortMenu} icon={'sort-variant'} compact>Ordenar</Button>}>
+          <Menu.Item onPress={() => {}} title="Item 1" />
+          <Menu.Item onPress={() => {}} title="Item 2" />
+          <Divider />
+          <Menu.Item onPress={() => {}} title="Item 3" />
+        </Menu>
+      </View>
+      
+        <FlatList
+        //contentContainerStyle={styles.scrollView}
+          refreshControl={
+            <RefreshControl
+              colors={[colors.primary]}
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />}
+          data={state.data}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+          onEndReached={() => loadServices(state.page+1)}
+          onEndReachedThreshold={0.1}
+          ListFooterComponent={renderFooter}
+        />
+    </View>    
   )
 }
+
 
 
 

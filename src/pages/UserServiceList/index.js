@@ -36,7 +36,7 @@ export default function UserServiceListPage({ navigation }){
                     </Card.Content>                    
                     <Card.Actions>
                         <Button onPress={() => navigation.navigate("CreateService",{
-                            service: item
+                            serviceId: item.id
                         },{ options: { title: 'Editar Serviço'}})}>Editar</Button>
                         <Button>Excluir</Button>
                     </Card.Actions>
