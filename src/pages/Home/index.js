@@ -71,7 +71,9 @@ const MyComponent = () => {
 
 export default function Home({ navigation }) {
 
-  const { search } = useApp();
+  let isMounted = false;   
+
+  const { search, setSearch} = useApp();
   const { colors } = useTheme();
 
   const limit = 2
@@ -87,6 +89,9 @@ export default function Home({ navigation }) {
 
   const [refreshing, setRefreshing] = useState(false);
 
+  const [selectedFilterMenu, setSelectedFilterMenu] = useState('');
+  const [viewFilterMenu, setViewFilterMenu] = useState(false);
+  const [viewSortMenu, setViewSortMenu] = useState(false);
 
   const loadServices = async (page) => {
 
@@ -104,42 +109,65 @@ export default function Home({ navigation }) {
 
     setState({ ...state, loading: true });
     
-    const res = await Api.get(`/services?search=${search}&limit=${limit}&page=${page}`);
-    
-    if (res.data) {
-      setState({
-        data: [...state.data, ...res.data.rows],
-        page: res.data.page,
-        totalPages: res.data.totalPages,
-        loading: false,
-      });
+    console.log(selectedFilterMenu)
+
+    const res = await Api.get(`/services?search=${search}&type=${selectedFilterMenu}&limit=${limit}&page=${page}`);
+      
+    console.log(res);
+    if (res) {
+      if (isMounted){
+        if(res.data){
+          const data = res.data;
+          setState({
+            data: [...state.data, ...res.data.rows],
+            page: res.data.page,
+            totalPages: res.data.totalPages,
+            loading: false,
+          });
+        }
+        if(res.error){
+           setState(initialState);
+        }      
+      }
+
     }
   }
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    setState(initialState);
+    //setState(initialState);
     loadServices(1).then(() => setRefreshing(false));
   }, []);
 
+   
+
   useEffect(() => {
-    let cancel = false;
+    isMounted = true
+    setState({loading: true})
+    if(isMounted){
+      setState(initialState)
+      loadServices(1);  
+    }    
+  }, [selectedFilterMenu]);  
+  
+  useEffect(() => {
+    isMounted = true
+    if(isMounted){
+      setState(initialState)
+      loadServices(1);  
+    }    
+  }, [search, setSearch]); 
 
-    loadServices(1).then(() => {
-    if (cancel) return;
-      setState({...state, loading: false});
-    });
-
-  return () => { 
-    cancel = true;
-  }
+  useEffect(() => {
+     isMounted = true;
+     if(isMounted){
+      loadServices(1);  
+    }  
     
-  },[]);
+  },[]);  
 
-  useEffect(() => {
-    setState(initialState);
-    loadServices(1);
-  }, [search])
+  
+
 
   const renderItem = ({ item }) => (
     <Card style={{ margin: 10, borderRadius: 25, borderWidth: 1, borderColor:colors.primary}}>
@@ -187,8 +215,7 @@ export default function Home({ navigation }) {
     );
   }
 
-  const [viewFilterMenu, setViewFilterMenu] = useState(false);
-  const [viewSortMenu, setViewSortMenu] = useState(false);
+
 
   const openViewFilterMenu = () => {
     setViewFilterMenu(true);
@@ -216,13 +243,14 @@ export default function Home({ navigation }) {
       <Menu
           visible={viewFilterMenu}
           onDismiss={closeViewFilterMenu}
-          anchor={<Button onPress={openViewFilterMenu}  icon={'filter-variant'}  compact>Filtrar</Button>}>
-          <Menu.Item onPress={() => {}} title="Item 1" />
-          <Menu.Item onPress={() => {}} title="Item 2" />
-          <Divider />
-          <Menu.Item onPress={() => {}} title="Item 3" />
+          anchor={<Button onPress={openViewFilterMenu}  icon={'filter-variant'} compact>Filtrar</Button>}>
+           {
+             ['Serviços Gerais', 'Encomendas', 'Entrega Domicílio', 'Consertos', 'Outros'].map( (item, index) => (
+                <Menu.Item key={index} onPress={() => { setSelectedFilterMenu(item); closeViewFilterMenu()}} title={item} disabled={selectedFilterMenu === item}/>
+             ))
+           }
         </Menu>
-        <Menu
+        {/* <Menu
           visible={viewSortMenu}
           onDismiss={closeViewSortMenu}
           anchor={<Button onPress={openViewSortMenu} icon={'sort-variant'} compact>Ordenar</Button>}>
@@ -230,7 +258,7 @@ export default function Home({ navigation }) {
           <Menu.Item onPress={() => {}} title="Item 2" />
           <Divider />
           <Menu.Item onPress={() => {}} title="Item 3" />
-        </Menu>
+        </Menu> */}
       </View>
       
         <FlatList
@@ -243,6 +271,7 @@ export default function Home({ navigation }) {
             />}
           data={state.data}
           renderItem={renderItem}
+          ListEmptyComponent={() => <View style={{alignItems:'center'}}><Text>Não foi encontrado nenhum Serviço</Text></View>}
           keyExtractor={item => item.id}
           onEndReached={() => loadServices(state.page+1)}
           onEndReachedThreshold={0.1}

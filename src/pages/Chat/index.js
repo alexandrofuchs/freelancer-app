@@ -16,11 +16,11 @@ export default function ChatPage({ navigation, route }) {
 
   const [messages, setMessages] = useState([]);
 
-  const [socket , setSocket]  = useState(io(BASE_URL));
+  const [socket , setSocket]  = useState(io(BASE_URL, { auth:{id: userData.id }}));
   
   const sendMessage = () => {
 
-   
+   socket.
     socket.emit('sendMessage', { user: userData.firstName, message, serviceOrderId: route.params.serviceOrderId ? route.params.serviceOrderId : null });
     setMessage('');
   }

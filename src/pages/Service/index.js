@@ -96,9 +96,9 @@ export default function ServicePage({ route, navigation }) {
             {/* </List.Item> */}
 
             {
-                service ? (service.items.length) ?                    
-                        <ItemsComponent />
-                    : null: null
+                service ? (service.items.length) ?
+                    <ItemsComponent />
+                    : null : null
             }
 
             {/* <List.Section title="Dias e Horários:">
@@ -130,69 +130,27 @@ export default function ServicePage({ route, navigation }) {
         </View>
     );
 
+
     const [question, setQuestion] = useState("");
 
-    const QuestionsComponent = () => {
-        
-        const onSendQuestion = async () => {
-            try {
-                const res = await Api.post(`/services/${service.id}/questions`, {
-                    userId: userData.id,
-                    question,
-                });
-    
-                if (res.data) {             
-                    setService({...service, Questions: [...service.Questions, res.data]})
-                    setQuestion('');
-                }
+    const onSendQuestion = async () => {
+        try {
+            const res = await Api.post(`/services/${service.id}/questions`, {
+                userId: userData.id,
+                question,
+            });
 
-            } catch (error) {
-                console.log(error);
+            if (res.data) {
+                setService({ ...service, Questions: [...service.Questions, res.data] })
+                setQuestion('');
             }
+
+        } catch (error) {
+            console.log(error);
         }
-
-        const containerStyle = { backgroundColor: 'white', padding: 20 };
-
-        return (
-            <View style={{ maxHeight: 150}}>
-                <ScrollView>
-                <View style={{ flexDirection: 'row', height: 40, }}>
-                <TextInput
-                    style={{ flex: 1, height: 30, justifyContent:'center' }}
-                    value={question}
-                    contentContainerStyle={containerStyle}
-                    placeholder='faça uma pergunta ao ofertante'
-                    onChangeText={value => setQuestion(value)}
-                //onChangeText={text => { setQuestion(text) }}    
-                />                
-                <Button
-                    style={{ height: 40 }}
-                    mode="contained"
-                    onPress={onSendQuestion}
-                    compact    
-                >Enviar</Button>
-     
-                </View>    
-                {
-                    service.Questions && service.Questions.length ?
-                        service.Questions.map((item, index) => (
-                            <View key={index}>
-                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <Title>{item.userName}: </Title>
-                                    <Text>{item.question}</Text>
-                                </View>
-
-
-                                {item.answer ? <List.Item title={item.answer} /> : null}
-                            </View>
-                        ))
-                        : <View style={{height: 30, width: '100%'}}><Text>Não há Perguntas para este serviço</Text></View>
-                }
-                
-                </ScrollView>
-            </View>
-        )
     }
+
+    const containerStyle = { backgroundColor: 'white', padding: 20 };
 
     const ReviewsComponent = () => {
         return (
@@ -225,10 +183,10 @@ export default function ServicePage({ route, navigation }) {
     return (
         <Card
             style={{
-                margin: '2%',                
+                margin: '2%',
                 borderRadius: 25,
-                maxHeight: '100%',
-                
+                height: '98%',
+
             }}
         >
             <View
@@ -243,58 +201,97 @@ export default function ServicePage({ route, navigation }) {
                 <Card.Title
 
                     title={'Detalhes do Serviço'}
-                    titleStyle={{ 
-                        alignItems:'flex-end',
-                        color: colors.background, 
-                        justifyContent:'flex-end',
-                        textAlign: 'center', flex: 1 }}
+                    titleStyle={{
+                        alignItems: 'flex-end',
+                        color: colors.background,
+                        justifyContent: 'flex-end',
+                        textAlign: 'center', flex: 1
+                    }}
                 ></Card.Title>
             </View>
             <ScrollView
-                contentContainerStyle={{ alignItems: 'stretch', justifyContent: 'space-between' }}
+                contentContainerStyle={{ height: '100%', alignItems: 'stretch', justifyContent: 'space-between' }}
             >
                 <Card.Content>
                     <UserProfileComponent />
                     <ServiceDescriptionComponent />
                     <List.AccordionGroup>
-                    <List.Accordion
-                        id={1}
-                        title="Perguntas e Respostas: "
-                        style={{
-                            height:40, 
-                            justifyContent:'center',
-                            backgroundColor:colors.surface
-                        }}
-                        
-                    >
-                        <QuestionsComponent />
-                    </List.Accordion>
-                    <List.Accordion
-                        id={2}
-                        title="Reviews: "
-                        style={{
-                            height:40, 
-                            justifyContent:'center',
-                            backgroundColor:colors.surface
-                        }}
-                    >
-                        <Divider />
-                        <ReviewsComponent />
-                    </List.Accordion>
+                        <List.Accordion
+                            id={1}
+                            title="Perguntas e Respostas: "
+                            style={{
+                                height: 40,
+                                justifyContent: 'center',
+                                backgroundColor: colors.surface
+                            }}
+
+                        >
+                            <View style={{ maxHeight: 150 }}>
+                                <ScrollView>
+                                    <View style={{ flexDirection: 'row', height: 40, }}>
+                                        <TextInput
+                                            style={{ flex: 1, height: 30, justifyContent: 'center' }}
+                                            value={question}
+                                            contentContainerStyle={containerStyle}
+                                            placeholder='faça uma pergunta ao ofertante'
+                                            onChangeText={value => setQuestion(value)}
+                                        //onChangeText={text => { setQuestion(text) }}    
+                                        />
+                                        <Button
+                                            style={{ height: 40 }}
+                                            mode="contained"
+                                            onPress={onSendQuestion}
+                                            compact
+                                        >Enviar</Button>
+
+                                    </View>
+                                    {
+                                        service.Questions && service.Questions.length ?
+                                            service.Questions.map((item, index) => (
+                                                <View key={index}>
+                                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                        <Title>{item.userName}: </Title>
+                                                        <Text>{item.question}</Text>
+                                                    </View>
+
+
+                                                    {item.answer ? <List.Item title={item.answer} /> : null}
+                                                </View>
+                                            ))
+                                            : <View style={{ height: 30, width: '100%' }}><Text>Não há Perguntas para este serviço</Text></View>
+                                    }
+
+                                </ScrollView>
+                            </View>
+                        </List.Accordion>
+                        <List.Accordion
+                            id={2}
+                            title="Reviews: "
+                            style={{
+                                height: 40,
+                                justifyContent: 'center',
+                                backgroundColor: colors.surface
+                            }}
+                        >
+                            <Divider />
+                            <ReviewsComponent />
+                        </List.Accordion>
                     </List.AccordionGroup>
                 </Card.Content>
 
-                    <Button
-                        color={colors.background}
-                        style={{ 
-                            borderBottomStartRadius: 25,
-                            borderBottomEndRadius: 25, 
-                            backgroundColor: colors.primary }}
-                        onPress={() => navigation.navigate("ServiceOrder", {
-                            service
-                        })}
-                    >Solicitar</Button>        
+
             </ScrollView>
+            <Button
+                color={colors.background}
+                style={{
+                    borderBottomStartRadius: 25,
+                    borderBottomEndRadius: 25,
+                    backgroundColor: colors.primary
+                }}
+                onPress={() => navigation.navigate("ServiceOrder", {
+                    service
+                })}
+            >Solicitar</Button>
         </Card>
     );
 };

@@ -19,10 +19,18 @@ export default function AppBar(props) {
     const [visible, setVisible] = useState(false);
     const { signed, signOut } = useAuthenticate();
 
-    const debouncedSearch = useCallback(
-		_.debounce(search => searchService(search), 1000),
-		[], 
-	);
+    // const debouncedSearch = useCallback(
+    //     _.debounce(search => searchService(search), 1000),
+	// 	[], 
+	// );
+
+    let time = null
+    const debouncedSearch = (search) => {
+        clearTimeout(time);
+        time = setTimeout(()=>{
+            searchService(search)
+        }, 1000)
+    }
 
     const openMenu = () => setVisible(true);
     const closeMenu = () => setVisible(false);

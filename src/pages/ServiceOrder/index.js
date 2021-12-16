@@ -17,8 +17,8 @@ export default function ServiceOrderPage({ navigation, route }) {
 
     const [service, setService] = useState(route.params.service? route.params.service : null);
 
-    const[errorDate, setErrorDate] = useState('');
-    const[errorHour, setErrorHour] = useState('');
+    const[errorDate, setErrorDate] = useState(null);
+    const[errorHour, setErrorHour] = useState(null);
 
     const { schedule } = service;
 
@@ -84,7 +84,7 @@ export default function ServiceOrderPage({ navigation, route }) {
             userId: userData.id,
             serviceId:service.id,
             date: date.toLocaleDateString(),
-            hour: hour,            
+            hour: date.toLocaleTimeString({ hour: '2-digit', minute: '2-digit' }).substring(0,5)    
         });
 
         console.log(res);
@@ -101,17 +101,23 @@ export default function ServiceOrderPage({ navigation, route }) {
         console.log(weekDays[date.getDay()].label, weekDays[date.getDay()].value)
         if(!!schedule.active){
             if(!weekDays[date.getDay()].value){
+                console.log('oi')
                 setErrorDate('O dia desejado não está disponivel!');
             }else{
-                setErrorDate('');
+                setErrorDate(null);
             }
-            if(date.toLocaleTimeString() < schedule.startTime || date.toLocaleTimeString() > schedule.endTime){
+            if(date.toLocaleTimeString() < schedule.startTime | date.toLocaleTimeString() > schedule.endTime){
                 setErrorHour('O horário desejado não está disponivel!');
             }else{
-                setErrorHour('');
+                setErrorHour(null);
             }
         }
     },[date])
+
+    useEffect(()=>{
+        console.log(errorDate)
+
+    },[errorDate])
 
     return (
         <Card style={{margin: '2%', borderRadius:25}}>

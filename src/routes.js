@@ -25,6 +25,7 @@ import ReviewPage from './pages/Review';
 import ContractedServicePage from './pages/ContractedService';
 import UserServiceListPage from './pages/UserServiceList';
 import SolicitedServicesPage from './pages/SolicitedServices';
+import ServiceQuestionsPage from './pages/ServiceQuestions';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -63,6 +64,7 @@ export default function Routes() {
                             <Stack.Screen name="ContractedService" component={ContractedServicePage} options={{title: 'Solicitação de Serviço' }} /> 
                             <Stack.Screen name="UserServiceList" component={UserServiceListPage} options={{title: 'Meus Serviços' }} /> 
                             <Stack.Screen name="SolicitedServices" component={SolicitedServicesPage} options={{title: 'Solicitações' }} /> 
+                            <Stack.Screen name="ServiceQuestions" component={ServiceQuestionsPage} options={{title: 'Perguntas dos usuários' }} /> 
                             
 
                             {/* <Stack.Screen name="UserProfile" component={ViewProfile} options={{title: 'Visualizar Perfil' }} />                      */}
