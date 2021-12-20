@@ -27,7 +27,7 @@ export default function SignUpPage({ navigation }) {
         const { colors } = useTheme();
 
         const onSignUp = async () => {
-                //setLoading(true);
+  
                 const res = await upsert({
                         firstName: userForm.firstName.value,
                         lastName: userForm.lastName,
@@ -35,15 +35,15 @@ export default function SignUpPage({ navigation }) {
                         password: userForm.password,   
                         repeatPassword: userForm.repeatPassword, 
                  });
-                console.log(res); 
+
                 if(!!res.error){
                         setError(res.error);
                 }else{
                         setMessage('Cadastro realizado com sucesso!')
                         setTimeout(() => {navigation.navigate("SignIn")}, 2000)
                         
-                }   
-                //setLoading(false);      
+                }  
+          
         }
 
         const [message, setMessage] = useState('');

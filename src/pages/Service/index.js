@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { FlatList, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import {
@@ -43,13 +43,13 @@ export default function ServicePage({ route, navigation }) {
     const getService = async () => {
         try {
             const res = await Api.get(`/services/${serviceId}`);
-            console.log(res)
+  
             if (!!res.data) {
                 setService(res.data.data);
             }
 
-        } catch (err) {
-            console.log(err)
+        } catch (error) {
+            console.log(error)
         }
     }
 
@@ -209,9 +209,9 @@ export default function ServicePage({ route, navigation }) {
                     }}
                 ></Card.Title>
             </View>
-            <ScrollView
+            {/* <ScrollView
                 contentContainerStyle={{ height: '100%', alignItems: 'stretch', justifyContent: 'space-between' }}
-            >
+            > */}
                 <Card.Content>
                     <UserProfileComponent />
                     <ServiceDescriptionComponent />
@@ -227,7 +227,7 @@ export default function ServicePage({ route, navigation }) {
 
                         >
                             <View style={{ maxHeight: 150 }}>
-                                <ScrollView>
+                                
                                     <View style={{ flexDirection: 'row', height: 40, }}>
                                         <TextInput
                                             style={{ flex: 1, height: 30, justifyContent: 'center' }}
@@ -246,8 +246,9 @@ export default function ServicePage({ route, navigation }) {
 
                                     </View>
                                     {
-                                        service.Questions && service.Questions.length ?
-                                            service.Questions.map((item, index) => (
+                                        <FlatList
+                                            data={service ? service.Questions : null}
+                                            renderItem={({item, index})=>(
                                                 <View key={index}>
                                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                         <Title>{item.userName}: </Title>
@@ -255,13 +256,13 @@ export default function ServicePage({ route, navigation }) {
                                                     </View>
 
 
-                                                    {item.answer ? <List.Item title={item.answer} /> : null}
+                                                    {item.answer ? <List.Item title={`  ${service ? service.User.firstName : null}: ${item.answer}`} /> : null}
                                                 </View>
-                                            ))
-                                            : <View style={{ height: 30, width: '100%' }}><Text>Não há Perguntas para este serviço</Text></View>
+                                            )}
+                                            ListEmptyComponent={() => <View style={{ height: 30, width: '100%' }}><Text>Não há Perguntas para este serviço</Text></View>}
+                                        ></FlatList>                                        
                                     }
 
-                                </ScrollView>
                             </View>
                         </List.Accordion>
                         <List.Accordion
@@ -280,7 +281,7 @@ export default function ServicePage({ route, navigation }) {
                 </Card.Content>
 
 
-            </ScrollView>
+            {/* </ScrollView> */}
             <Button
                 color={colors.background}
                 style={{

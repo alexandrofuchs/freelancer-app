@@ -108,12 +108,9 @@ export default function Home({ navigation }) {
     };
 
     setState({ ...state, loading: true });
-    
-    console.log(selectedFilterMenu)
 
     const res = await Api.get(`/services?search=${search}&type=${selectedFilterMenu}&limit=${limit}&page=${page}`);
       
-    console.log(res);
     if (res) {
       if (isMounted){
         if(res.data){

@@ -18,7 +18,6 @@ export default function ContractedServicesPage({ navigation }) {
             const res = await Api.get(`/contracting/${userData.id}/serviceOrders`);
 
             if (res.data) {
-                console.log(res);
                 setContractedServices(res.data);
             }
 

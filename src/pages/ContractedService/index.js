@@ -12,7 +12,7 @@ export default function ContractedServicePage({ navigation, route}){
 
             const res = await Api.get(`/serviceOrders/${route.params.serviceOrderId}`);
 
-            console.log(res);
+            //console.log(res);
 
             if(res.data){
                 setServiceOrder(res.data);

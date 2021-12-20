@@ -27,7 +27,7 @@ export default function UserProfile({ route, navigation }) {
     const getProfile = async () => {
         try {
             const res = await Api.get(`/users/${user.id}/profiles`);
-            console.log(res.data);
+   
             if (res.data) {
                 setProfile(res.data)
             }

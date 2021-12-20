@@ -27,8 +27,6 @@ export default function ReviewPage({ navigation, route }) {
                 description
             })
 
-            console.log(res);
-
             if(res.data){
                 navigation.pop();
             }

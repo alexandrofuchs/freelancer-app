@@ -48,25 +48,25 @@ export default function SolicitedServicesPage({ navigation, route }) {
 
 
     const onAccepted = async (id) => {
-        console.log(id)
+  
         const res = await Api.put(`/serviceOrders/${id}/accepted`);
         if(res.data){
             getContractedServices();
         }
-        console.log(res);
+  
     }
 
     
     const onCancelled = async (id) => {
-        console.log(id)
+
         const res = await Api.put(`/serviceOrders/${id}/cancelled`);
-        console.log(res);
+
     }    
 
     const onConcluded = async (id) => {
-        console.log(id)
+
         const res = await Api.put(`/serviceOrders/${id}/concluded`);
-        console.log(res);
+
     }
 
     const onReschedule = async (id) => {
@@ -74,13 +74,8 @@ export default function SolicitedServicesPage({ navigation, route }) {
             date: '20/10/2021',
             hour: '18:00'
         });
-        console.log(res);
-    }
 
-    // useEffect(() => {        
-    //     setLoading(true)
-    //     getContractedServices().then(() => setLoading(false));        
-    // }, [])
+    }
 
     useEffect(() => {
         setLoading(true)

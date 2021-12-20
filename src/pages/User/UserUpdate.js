@@ -27,7 +27,7 @@ export default function UserUpdate({ navigation }) {
             setError(res.error);
         }else{
             await validateToken();
-            console.log(res.data);
+ 
             navigation.navigate("UserAccount");            
         }
     }

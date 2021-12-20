@@ -24,7 +24,7 @@ export default function ViewProfile() {
         const getProfile = async () => {
             try {
                 const res = await Api.get(`/users/${userData.id}/profiles`);
-                console.log(res);
+       
                 if (res.data) {
                     setProfile(res.data.data);
                 }

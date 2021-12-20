@@ -20,7 +20,7 @@ export default function UserServiceListPage({ navigation }){
         if(res.data){
             setServices(res.data);
         }
-        console.log(res);
+
     }
 
     useEffect(()=>{

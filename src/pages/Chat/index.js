@@ -16,18 +16,16 @@ export default function ChatPage({ navigation, route }) {
 
   const [messages, setMessages] = useState([]);
 
-  const [socket , setSocket]  = useState(io(BASE_URL, { auth:{id: userData.id }}));
+  const [socket , setSocket]  = useState(io(BASE_URL));
   
   const sendMessage = () => {
 
-   socket.
     socket.emit('sendMessage', { user: userData.firstName, message, serviceOrderId: route.params.serviceOrderId ? route.params.serviceOrderId : null });
     setMessage('');
   }
 
   useEffect(() => {
     socket.on("previusMessages", msgs => {
-      console.log(msgs);
       setMessages(msgs);
     });
   
@@ -36,21 +34,13 @@ export default function ChatPage({ navigation, route }) {
 
   useEffect(() => {
     socket.on("receivedMessage", msg => {
-      console.log(msg);
-      console.log([...messages])
       setMessages([...messages,msg])
     });
   })
 
-  useEffect(() => {
-      console.log(messages)
-  },[messages])
-
-
 
   return (
     <Card style={{ flex: 1, justifyContent: 'space-between',borderBottomLeftRadius: 25, borderBottomRightRadius: 25, padding: 5, margin: 5}}>
-      {/* <Card.Content style={{ height: '85%', backgroundColor: '#f1f1f1' }}> */}
         <ScrollView>
           {
             messages ?
@@ -64,7 +54,6 @@ export default function ChatPage({ navigation, route }) {
             )) : null
           }
         </ScrollView>
-      {/* </Card.Content> */}
 
       <View style={{ flexDirection: 'row'}}>
         <TextInput

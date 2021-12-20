@@ -67,17 +67,12 @@ export default function CreateServicePage({ navigation, route }) {
 
     const getService = async (id) => {
         const res = await Api.get(`/services/${id}`);
-        console.log(res);
-
+    
         if (res.data) {
             setFields(res.data.data);
         }
 
     }
-
-    useEffect(()=>{
-        console.log(fields)
-    },[fields])
 
     const [error, setError] = useState(null);
     
@@ -152,8 +147,6 @@ export default function CreateServicePage({ navigation, route }) {
     const onSend = async () => {
         try {
 
-            console.log(fields);
-
             let res = null;
             if(fields.id){
 
@@ -176,8 +169,6 @@ export default function CreateServicePage({ navigation, route }) {
                 });
 
             }
-
-            console.log(res)
 
             if (res.error) {
                 setError(res.error);
@@ -223,7 +214,6 @@ export default function CreateServicePage({ navigation, route }) {
     useEffect(()=>{
         setLoading(true)
         if(route.params){
-            console.log(route)
             getService(route.params.serviceId).then(() => setLoading(false))
         }        
         setLoading(false)

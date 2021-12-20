@@ -53,7 +53,7 @@ export default function UserPresentation({ navigation }) {
                 biography: profile.biography,
                 items: profile.items,
             });
-            console.log(res)
+
             if (res.data) {
                 navigation.navigate("UserAccount");
             }
@@ -76,7 +76,7 @@ export default function UserPresentation({ navigation }) {
         const getProfile = async () => {
             try {
                 const res = await Api.get(`/users/${userData.id}/profiles`);
-                console.log(res.data);
+    
                 if (res.data) {
                     setProfile(res.data)
                 }

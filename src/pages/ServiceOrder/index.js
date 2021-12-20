@@ -87,7 +87,6 @@ export default function ServiceOrderPage({ navigation, route }) {
             hour: date.toLocaleTimeString({ hour: '2-digit', minute: '2-digit' }).substring(0,5)    
         });
 
-        console.log(res);
         if(res.data){
             navigation.pop();
         }
@@ -97,11 +96,9 @@ export default function ServiceOrderPage({ navigation, route }) {
    
 
     useEffect(()=>{
-        console.log(schedule)
-        console.log(weekDays[date.getDay()].label, weekDays[date.getDay()].value)
+
         if(!!schedule.active){
             if(!weekDays[date.getDay()].value){
-                console.log('oi')
                 setErrorDate('O dia desejado não está disponivel!');
             }else{
                 setErrorDate(null);
@@ -113,11 +110,6 @@ export default function ServiceOrderPage({ navigation, route }) {
             }
         }
     },[date])
-
-    useEffect(()=>{
-        console.log(errorDate)
-
-    },[errorDate])
 
     return (
         <Card style={{margin: '2%', borderRadius:25}}>
